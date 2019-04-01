@@ -870,6 +870,8 @@ public class QARunner extends AbstractRunner {
         def priorityNum = !isParamEmpty(Configuration.get("BuildPriority"))?Configuration.get("BuildPriority"):"5"
         def supportedBrowsers = !isParamEmpty(currentSuite.getParameter("jenkinsPipelineBrowsers"))?currentSuite.getParameter("jenkinsPipelineBrowsers"):""
         def currentBrowser = !isParamEmpty(Configuration.get("browser"))?Configuration.get("browser"):"NULL"
+        def supportedDevices = !isParamEmpty(currentSuite.getParameter("jenkinsPipelineDevices"))?currentSuite.getParameter("jenkinsPipelineDevices"):""
+        def currentDevice = !isParamEmpty(Configuration.get("devicePool"))?Configuration.get("devicePool"):"NULL"
         def logLine = "regressionPipelines: ${regressionPipelines};\n	jobName: ${jobName};\n	" +
                 "jobExecutionOrderNumber: ${orderNum};\n	email_list: ${emailList};\n	" +
                 "supportedEnvs: ${supportedEnvs};\n	currentEnv(s): ${currentEnvs};\n	" +
@@ -918,6 +920,37 @@ public class QARunner extends AbstractRunner {
                         putNotNull(pipelineMap, "queue_registration", queueRegistration)
                         registerPipeline(currentSuite, pipelineMap)
                     }
+                    for (def supportedDevice : supportedDevices.split(",")) {
+                        /* supportedDevices - list of supported devices for suite which are declared in testng suite xml file
+                           supportedDevice - splitted single device name from supportedDevices
+                           currentDevice - explicilty selected device on cron/pipeline level to execute tests */
+
+                        Map supportedDeviceValues = getSupportedDeviceValues(currentDevice, supportedDevice)
+                        if (!currentDevice.equals(supportedDevice) && !isParamEmpty(currentDevice)) {
+                            logger.info("Skip execution for device: ${supportedDevice}; currentDevice: ${currentDevice}")
+                            continue
+                        }
+                        def pipelineMap = [:]
+                        // put all not NULL args into the pipelineMap for execution
+                        putMap(pipelineMap, pipelineLocaleMap)
+                        putMap(pipelineMap, supportedDeviceValues)
+                        pipelineMap.put("name", regressionPipeline)
+                        pipelineMap.put("branch", Configuration.get("branch"))
+                        pipelineMap.put("ci_parent_url", setDefaultIfEmpty("ci_parent_url", Configuration.Parameter.JOB_URL))
+                        pipelineMap.put("ci_parent_build", setDefaultIfEmpty("ci_parent_build", Configuration.Parameter.BUILD_NUMBER))
+                        pipelineMap.put("retry_count", Configuration.get("retry_count"))
+                        putNotNull(pipelineMap, "thread_count", Configuration.get("thread_count"))
+                        pipelineMap.put("jobName", jobName)
+                        pipelineMap.put("env", supportedEnv)
+                        pipelineMap.put("order", orderNum)
+                        pipelineMap.put("BuildPriority", priorityNum)
+                        putNotNullWithSplit(pipelineMap, "emailList", emailList)
+                        putNotNullWithSplit(pipelineMap, "executionMode", executionMode)
+                        putNotNull(pipelineMap, "overrideFields", Configuration.get("overrideFields"))
+                        putNotNull(pipelineMap, "queue_registration", queueRegistration)
+                        registerPipeline(currentSuite, pipelineMap)
+                    }
+
                 }
             }
         }
@@ -983,6 +1016,20 @@ public class QARunner extends AbstractRunner {
         valuesMap.os_version = osVersion
         return valuesMap
     }
+
+    protected getSupportedDeviceValues(currentDevice, supportedDevice){
+        def valuesMap = [:]
+        def device = currentDevice
+        def deviceVersion = ""
+        def deviceInfoArray = deviceInfo.split(" ")
+        device = deviceInfoArray[0]
+        if (deviceInfoArray.size() > 1) {
+            deviceVersion = deviceInfoArray[1]
+        }
+        valuesMap.device = device
+        return valuesMap
+    }
+
 
     protected def executeStages() {
         def mappedStages = [:]
