@@ -1021,6 +1021,7 @@ public class QARunner extends AbstractRunner {
         def valuesMap = [:]
         def device = currentDevice
         def deviceVersion = ""
+	String deviceInfo = supportedDevice
         def deviceInfoArray = deviceInfo.split(" ")
         device = deviceInfoArray[0]
         if (deviceInfoArray.size() > 1) {
