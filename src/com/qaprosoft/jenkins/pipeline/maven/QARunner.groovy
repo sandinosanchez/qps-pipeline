@@ -550,6 +550,10 @@ public class QARunner extends AbstractRunner {
         } else {
             Configuration.set("capabilities.devicePool", devicePool)
         }
+        
+        if (!Configuration.get("deviceBrowser").isEmpty()) {
+            Configuration.set("capabilities.deviceBrowser", Configuration.get("deviceBrowser"))
+        }
         // ATTENTION! Obligatory remove device from the params otherwise
         // hudson.remoting.Channel$CallSiteStackTrace: Remote call to JNLP4-connect connection from qpsinfra_jenkins-slave_1.qpsinfra_default/172.19.0.9:39487
         // Caused: java.io.IOException: remote file operation failed: /opt/jenkins/workspace/Automation/<JOB_NAME> at hudson.remoting.Channel@2834589:JNLP4-connect connection from
@@ -889,11 +893,13 @@ public class QARunner extends AbstractRunner {
                         //launch test only if current suite support cron regression execution for current env
                         continue
                     }
-                    for (def supportedBrowser : supportedBrowsers.split(",")) {
+                    for (def supportedBrowser : supportedBrowsers.split(";")) {
+                        supportedBrowser = supportedBrowser.trim()
+                        logger.info("supportedConfig: ${supportedBrowser}")
                         /* supportedBrowsers - list of supported browsers for suite which are declared in testng suite xml file
                            supportedBrowser - splitted single browser name from supportedBrowsers
                            currentBrowser - explicilty selected browser on cron/pipeline level to execute tests */
-                        Map supportedBrowserValues = getSupportedBrowserValues(currentBrowser, supportedBrowser)
+                        Map supportedConfigurations = getSupportedConfigurations(supportedBrowser)
                         if (!currentBrowser.equals(supportedBrowser) && !isParamEmpty(currentBrowser)) {
                             logger.info("Skip execution for browser: ${supportedBrowser}; currentBrowser: ${currentBrowser}")
                             continue
@@ -901,7 +907,7 @@ public class QARunner extends AbstractRunner {
                         def pipelineMap = [:]
                         // put all not NULL args into the pipelineMap for execution
                         putMap(pipelineMap, pipelineLocaleMap)
-                        putMap(pipelineMap, supportedBrowserValues)
+                        putMap(pipelineMap, supportedConfigurations)
                         pipelineMap.put("name", regressionPipeline)
                         pipelineMap.put("branch", Configuration.get("branch"))
                         pipelineMap.put("ci_parent_url", setDefaultIfEmpty("ci_parent_url", Configuration.Parameter.JOB_URL))
@@ -957,30 +963,28 @@ public class QARunner extends AbstractRunner {
         listPipelines.add(pipelineMap)
     }
 
-    protected getSupportedBrowserValues(currentBrowser, supportedBrowser){
+    protected getSupportedConfigurations(configDetails){
         def valuesMap = [:]
-        def browser = currentBrowser
-        def browserVersion = ""
-        def os = ""
-        def osVersion = ""
-
-        String browserInfo = supportedBrowser
-        if (supportedBrowser.contains("-")) {
-            def systemInfoArray = supportedBrowser.split("-")
-            String osInfo = systemInfoArray[0]
-            os = OS.getName(osInfo)
-            osVersion = OS.getVersion(osInfo)
-            browserInfo = systemInfoArray[1]
+        // browser: chrome; browser: firefox;
+        // browser: chrome, browser_version: 74;
+        // os:Windows, os_version:10, browser:chrome, browser_version:72;
+        // device:Samsung Galaxy S8, os_version:7.0
+        // devicePool:Samsung Galaxy S8, platform: ANDROID, platformVersion: 9, deviceBrowser: chrome
+        
+        for (def config : configDetails.split(",")) {
+            if (config == null) {
+                logger.warn("Supported config data is NULL!")
+                continue;
+            }
+            config = config.trim()
+            //TODO: handle NPE for trim operations
+            def name = config.split(":")[0].trim()
+            logger.info("name: " + name)
+            def value = config.split(":")[1].trim()
+            logger.info("value: " + value)
+            valuesMap[name] = value
         }
-        def browserInfoArray = browserInfo.split(" ")
-        browser = browserInfoArray[0]
-        if (browserInfoArray.size() > 1) {
-            browserVersion = browserInfoArray[1]
-        }
-        valuesMap.browser = browser
-        valuesMap.browser_version = browserVersion
-        valuesMap.os = os
-        valuesMap.os_version = osVersion
+        logger.info("valuesMap: " + valuesMap)
         return valuesMap
     }
 
@@ -1031,10 +1035,16 @@ public class QARunner extends AbstractRunner {
     }
 
     protected def getStageName(jobParams) {
+        // Put into this nethod all unique pipeline stage params otherwise less jobs then needed are launched!
         def stageName = ""
         String jobName = jobParams.get("jobName")
         String env = jobParams.get("env")
+        String devicePool = jobParams.get("devicePool")
+        String deviceBrowser = jobParams.get("deviceBrowser")
+        
         String browser = jobParams.get("browser")
+        String browser_version = jobParams.get("browser_version")
+        String overrideFields = jobParams.get("overrideFields")
         String locale = jobParams.get("locale")
         if (!isParamEmpty(jobName)) {
             stageName += "Stage: ${jobName} "
@@ -1042,11 +1052,24 @@ public class QARunner extends AbstractRunner {
         if (!isParamEmpty(env)) {
             stageName += "Environment: ${env} "
         }
+        if (!isParamEmpty(devicePool)) {
+            stageName += "Device: ${devicePool} "
+        }
+        if (!isParamEmpty(deviceBrowser)) {
+            stageName += "Browser: ${deviceBrowser} "
+        }
         if (!isParamEmpty(browser)) {
             stageName += "Browser: ${browser} "
         }
+        if (!isParamEmpty(browser_version)) {
+            stageName += "Browser version: ${browser_version} "
+        }
+        
         if (!isParamEmpty(locale) && multilingualMode) {
             stageName += "Locale: ${locale} "
+        }
+        if (!isParamEmpty(overrideFields)) {
+            stageName += "Override: ${overrideFields} "
         }
         return stageName
     }
