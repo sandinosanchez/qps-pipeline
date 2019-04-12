@@ -96,7 +96,10 @@ public class TestJobFactory extends PipelineFactory {
 						configure addHiddenParameter('platform', '', '*')
 						break
 					case ~/^.*android.*$/:
-						choiceParam('devicePool', getDevices('ANDROID'), "Select the Device a Test will run against.  ALL - Any available device, PHONE - Any available phone, TABLET - Any tablet")
+						choiceParam('devicePool', getDevices('ANDROID'), "Select the Device a Test will run against.  ANY - Any available device or exact device.")
+                        if (getSuiteParameter("false", "jenkinsMobileWeb", currentSuite).toBoolean()) {
+                                choiceParam('deviceBrowser', ["chrome"], "Select the mobile browser a Test will run against.")
+                        }
 						//TODO: Check private repositories for parameter use and fix possible problems using custom pipeline
 						//stringParam('build', '.*', ".* - use fresh build artifact from S3 or local storage\n2.2.0.3741.45 - exact version you would like to use")
 						booleanParam('recoveryMode', false, 'Restart application between retries')
@@ -107,7 +110,10 @@ public class TestJobFactory extends PipelineFactory {
 						break
 					case ~/^.*ios.*$/:
 						//TODO:  Need to adjust this for virtual as well.
-						choiceParam('devicePool', getDevices('iOS'), "Select the Device a Test will run against.  ALL - Any available device, PHONE - Any available phone, TABLET - Any tablet")
+						choiceParam('devicePool', getDevices('iOS'), "Select the Device a Test will run against.  ANY - Any available device or exact device.")
+                        if (getSuiteParameter("false", "jenkinsMobileWeb", currentSuite).toBoolean()) {
+                            choiceParam('deviceBrowser', ["safari"], "Select the mobile browser a Test will run against.")
+                        }
 						//TODO: Check private repositories for parameter use and fix possible problems using custom pipeline
 						//stringParam('build', '.*', ".* - use fresh build artifact from S3 or local storage\n2.2.0.3741.45 - exact version you would like to use")
 						booleanParam('recoveryMode', false, 'Restart application between retries')
