@@ -120,9 +120,6 @@ public class Configuration {
 
 		def enumValues  = Parameter.values()
 		def envVars = context.env.getEnvironment()
-		envVars.each {
-			context.println "GLOB_VAR: " + it
-		}
 		for (enumValue in enumValues) {
 			//a. set default values from enum
 			vars.put(enumValue.getKey(), enumValue.getValue())
@@ -130,6 +127,9 @@ public class Configuration {
 				vars.put("screen_record_host", "https://\${QPS_HOST}/video/%s.mp4")
 				vars.put("vnc_protocol", "wss")
 				vars.put("vnc_port", "443")
+			}
+			vars.each {
+				context.println "ENUM_VAR: " + it
 			}
 			//b. redefine values from global variables if any
 			if (envVars.get(enumValue.getKey()) != null) {
