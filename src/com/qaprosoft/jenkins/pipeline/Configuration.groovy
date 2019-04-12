@@ -128,11 +128,9 @@ public class Configuration {
 				vars.put("vnc_protocol", "wss")
 				vars.put("vnc_port", "443")
 			}
-			vars.each {
-				context.println "ENUM_VAR: " + it
-			}
 			//b. redefine values from global variables if any
 			if (envVars.get(enumValue.getKey()) != null) {
+				context.println "MATCH_VAR: " + envVars.get(enumValue.getKey())
 				vars.put(enumValue.getKey(), envVars.get(enumValue.getKey()))
 			}
 		}
