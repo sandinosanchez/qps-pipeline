@@ -121,7 +121,7 @@ public class Configuration {
 		def enumValues  = Parameter.values()
 		def envVars = context.env.getEnvironment()
 		envVars.each {
-			context.println "GLOB_VAR: " + it.dump()
+			context.println "GLOB_VAR: " + it
 		}
 		for (enumValue in enumValues) {
 			//a. set default values from enum
