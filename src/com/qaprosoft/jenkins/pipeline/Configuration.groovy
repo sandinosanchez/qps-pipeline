@@ -136,9 +136,7 @@ public class Configuration {
 				vars.put(it.getKey(), envVars.get(it.getKey()))
 			}
 		}
-		vars.each {
-			context.println "OVERR_VAR: " + it
-		}
+
 		// 2. Load all job parameters into unmodifiable map
 		def jobParams = context.currentBuild.rawBuild.getAction(ParametersAction)
 		for (param in jobParams) {
