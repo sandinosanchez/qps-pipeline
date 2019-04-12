@@ -1005,15 +1005,13 @@ public class QARunner extends AbstractRunner {
         // devicePool:Samsung Galaxy S8, platform: ANDROID, platformVersion: 9, deviceBrowser: chrome
         
         for (def config : configDetails.split(",")) {
-            if (config == null) {
+            if (isParamEmpty(config)) {
                 logger.warn("Supported config data is NULL!")
-                continue;
+                continue
             }
-            config = config.trim()
-            //TODO: handle NPE for trim operations
-            def name = config.split(":")[0].trim()
+            def name = config.split(":")[0]?.trim()
             logger.info("name: " + name)
-            def value = config.split(":")[1].trim()
+            def value = config.split(":")[1]?.trim()
             logger.info("value: " + value)
             valuesMap[name] = value
         }
