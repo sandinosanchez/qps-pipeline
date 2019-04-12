@@ -130,8 +130,10 @@ public class Configuration {
 			}
 			//b. redefine values from global variables if any
 			if (envVars.get(enumValue.getKey()) != null) {
-				context.println "MATCH_VAR: " + envVars.get(enumValue.getKey())
 				vars.put(enumValue.getKey(), envVars.get(enumValue.getKey()))
+			}
+			vars.each {
+				context.println "OVERR_VAR: " + it
 			}
 		}
 
