@@ -124,17 +124,15 @@ public class Configuration {
 		for (enumValue in enumValues) {
 			//a. set default values from enum
 			vars.put(enumValue.getKey(), enumValue.getValue())
-
+			if (context.env.getEnvironment().get("JENKINS_URL").contains("https")) {
+				vars.put("screen_record_host", "https://\${QPS_HOST}/video/%s.mp4")
+				vars.put("vnc_protocol", "wss")
+				vars.put("vnc_port", "443")
+			}
 			//b. redefine values from global variables if any
 			if (envVars.get(enumValue.getKey()) != null) {
 				vars.put(enumValue.getKey(), envVars.get(enumValue.getKey()))
 			}
-		}
-
-		if (context.env.getEnvironment().get("JENKINS_URL").contains("https")) {
-			vars.put("screen_record_host", "https://\${QPS_HOST}/video/%s.mp4")
-			vars.put("vnc_protocol", "wss")
-			vars.put("vnc_port", "443")
 		}
 
 		// 2. Load all job parameters into unmodifiable map
