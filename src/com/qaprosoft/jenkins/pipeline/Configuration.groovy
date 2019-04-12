@@ -119,7 +119,6 @@ public class Configuration {
 		// any non empty value should be resolved in such order: Parameter, envvars and jobParams
 
 		def enumValues  = Parameter.values()
-		def envVars = context.env.getEnvironment()
 		for (enumValue in enumValues) {
 			//a. set default values from enum
 			vars.put(enumValue.getKey(), enumValue.getValue())
@@ -128,15 +127,18 @@ public class Configuration {
 				vars.put("vnc_protocol", "wss")
 				vars.put("vnc_port", "443")
 			}
-			//b. redefine values from global variables if any
-			if (envVars.get(enumValue.getKey()) != null) {
-				vars.put(enumValue.getKey(), envVars.get(enumValue.getKey()))
-			}
-			vars.each {
-				context.println "OVERR_VAR: " + it
-			}
 		}
 
+		//b. redefine values from global variables if any
+		def envVars = context.env.getEnvironment()
+		vars.each {
+			if (envVars.get(it.getKey()) != null) {
+				vars.put(it.getKey(), envVars.get(it.getKey()))
+			}
+		}
+		vars.each {
+			context.println "OVERR_VAR: " + it
+		}
 		// 2. Load all job parameters into unmodifiable map
 		def jobParams = context.currentBuild.rawBuild.getAction(ParametersAction)
 		for (param in jobParams) {
