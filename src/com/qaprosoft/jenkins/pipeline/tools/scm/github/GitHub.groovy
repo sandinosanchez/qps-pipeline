@@ -113,15 +113,14 @@ class GitHub implements ISCM {
             def subfolderExtension = [[$class: 'RelativeTargetDirectory', relativeTargetDir: subFolder]]
             checkoutParams.get("scm")["extensions"] = subfolderExtension
         }
-        checkoutParams.get("scm")["extensions"].find { Map option ->
-            if (option.$class.equals("CloneOption")) {
-                option.depth = 1
+        logger.info(checkoutParams.get("scm")["extensions"].dump())
+        if(shallow) {
+            checkoutParams.get("scm")["extensions"].find { Map option ->
+                if (option.$class.equals("CloneOption")) {
+                    option.depth = 1
+                }
             }
         }
-        logger.info(checkoutParams.get("scm")["extensions"].dump())
-//        if(shallow) {
-//
-//        }
         return checkoutParams
     }
 
