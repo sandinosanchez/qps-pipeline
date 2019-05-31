@@ -107,13 +107,14 @@ class GitHub implements ISCM {
                                     userRemoteConfigs: [[url: gitUrl, refspec: refspecValue, credentialsId: credentialsIdValue]]],
                               changelog: changelog,
                               poll: false]
-        logger.info("1111111")
+
         logger.info(checkoutParams.get("scm")["extensions"].dump())
         if (subFolder != null) {
             def subfolderExtension = [[$class: 'RelativeTargetDirectory', relativeTargetDir: subFolder]]
             checkoutParams.get("scm")["extensions"] = subfolderExtension
         }
-        checkoutParams.get("scm")["extensions"].find {
+        checkoutParams.get("scm")["extensions"].each {
+            logger.info("1111111")
             it.dump()
         }
 //        if(shallow) {
