@@ -114,13 +114,6 @@ class GitHub implements ISCM {
             checkoutParams.get("scm")["extensions"] = subfolderExtension
         }
         logger.info(checkoutParams.get("scm")["extensions"].dump())
-        if(shallow) {
-            checkoutParams.get("scm")["extensions"].find { Map option ->
-                if (option.$class.equals("CloneOption")) {
-                    option.depth = 1
-                }
-            }
-        }
         return checkoutParams
     }
 

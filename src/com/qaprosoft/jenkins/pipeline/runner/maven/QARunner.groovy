@@ -457,7 +457,7 @@ public class QARunner extends AbstractRunner {
                     context.timestamps {
 
                         prepareBuild(currentBuild)
-                        scmClient.clone()
+                        scmClient.clone(false)
 
                         downloadResources()
 
