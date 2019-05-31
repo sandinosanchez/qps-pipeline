@@ -115,7 +115,7 @@ class GitHub implements ISCM {
         }
         checkoutParams.get("scm")["extensions"].each {
             logger.info("1111111")
-            it.dump()
+            logger.info(it.dump())
         }
 //        if(shallow) {
 //
