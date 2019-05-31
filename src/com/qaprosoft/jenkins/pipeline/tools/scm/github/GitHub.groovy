@@ -108,7 +108,7 @@ class GitHub implements ISCM {
                               changelog: changelog,
                               poll: false]
         logger.info("1111111")
-        logger.info(checkoutParams.get("scm")["extensions"])
+        logger.info(checkoutParams.get("scm")["extensions"].dump())
         if (subFolder != null) {
             def subfolderExtension = [[$class: 'RelativeTargetDirectory', relativeTargetDir: subFolder]]
             checkoutParams.get("scm")["extensions"] = subfolderExtension
