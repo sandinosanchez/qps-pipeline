@@ -35,7 +35,7 @@ class GitHub implements ISCM {
     }
 
     public def clone() {
-        clone(true)
+        clone(false)
     }
 
     public def clone(isShallow) {
@@ -64,7 +64,7 @@ class GitHub implements ISCM {
                 }
 
             }
-            Map scmVars = context.checkout getCheckoutParams(gitUrl, branch, null, isShallow, true, '', credentialsId)
+            Map scmVars = context.checkout getCheckoutParams(gitUrl, branch, null, false, true, '', credentialsId)
             Configuration.set("scm_url", scmVars.GIT_URL)
             Configuration.set("scm_branch", branch)
             Configuration.set("scm_commit", scmVars.GIT_COMMIT)
@@ -75,7 +75,7 @@ class GitHub implements ISCM {
     public def clone(gitUrl, branch, subFolder) {
         context.stage('Checkout GitHub Repository') {
             logger.info("GitHub->clone\nGIT_URL: ${gitUrl}\nbranch: ${branch}")
-            context.checkout getCheckoutParams(gitUrl, branch, subFolder, true, false, '', credentialsId)
+            context.checkout getCheckoutParams(gitUrl, branch, subFolder, false, false, '', credentialsId)
         }
     }
 
@@ -84,7 +84,7 @@ class GitHub implements ISCM {
             def branch  = Configuration.get("sha1")
             def gitUrl = Configuration.resolveVars(gitHtmlUrl)
             logger.info("GitHub->clonePR\nGIT_URL: ${gitUrl}\nbranch: ${branch}")
-            context.checkout getCheckoutParams(gitUrl, branch, ".", true, false, '+refs/pull/*:refs/remotes/origin/pr/*', credentialsId)
+            context.checkout getCheckoutParams(gitUrl, branch, ".", false, false, '+refs/pull/*:refs/remotes/origin/pr/*', credentialsId)
         }
     }
 
@@ -113,7 +113,6 @@ class GitHub implements ISCM {
             def subfolderExtension = [[$class: 'RelativeTargetDirectory', relativeTargetDir: subFolder]]
             checkoutParams.get("scm")["extensions"] = subfolderExtension
         }
-        logger.info(checkoutParams.get("scm")["extensions"].dump())
         return checkoutParams
     }
 
