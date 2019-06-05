@@ -11,6 +11,7 @@ import com.qaprosoft.jenkins.pipeline.integration.zafira.ZafiraUpdater
 //[VD] do not remove this important import!
 import com.qaprosoft.jenkins.pipeline.Configuration
 import com.qaprosoft.jenkins.pipeline.runner.AbstractRunner
+import com.qaprosoft.jenkins.pipeline.integration.zafira.StatusMapper
 import com.qaprosoft.jenkins.jobdsl.factory.view.ListViewFactory
 import com.qaprosoft.jenkins.jobdsl.factory.pipeline.TestJobFactory
 import com.qaprosoft.jenkins.jobdsl.factory.pipeline.CronJobFactory
@@ -477,8 +478,8 @@ public class QARunner extends AbstractRunner {
                     logger.error(printStackTrace(e))
                     testRun = zafiraUpdater.getTestRunByCiRunId(uuid)
                     if (!isParamEmpty(testRun)) {
-                        zafiraUpdater.abortTestRun(uuid, currentBuild)
-                        if (!currentBuild.result.equals(BuildResult.ABORTED.toString()) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
+                        def abortedTestRun = zafiraUpdater.abortTestRun(uuid, currentBuild)
+                        if (!StatusMapper.ZafiraStatus.ABORTED.name().equals(abortedTestRun?.status) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
                             zafiraUpdater.sendSlackNotification(uuid, Configuration.get("slack_channels"))
                         }
                     }
