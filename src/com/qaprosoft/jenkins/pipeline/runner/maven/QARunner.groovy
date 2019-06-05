@@ -479,7 +479,7 @@ public class QARunner extends AbstractRunner {
                     testRun = zafiraUpdater.getTestRunByCiRunId(uuid)
                     if (!isParamEmpty(testRun)) {
                         def abortedTestRun = zafiraUpdater.abortTestRun(uuid, currentBuild)
-                        if (!StatusMapper.ZafiraStatus.ABORTED.name().equals(abortedTestRun?.status) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
+                        if (!isParamEmpty(abortedTestRun) && !StatusMapper.ZafiraStatus.ABORTED.name().equals(abortedTestRun.status) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
                             zafiraUpdater.sendSlackNotification(uuid, Configuration.get("slack_channels"))
                         }
                     }
