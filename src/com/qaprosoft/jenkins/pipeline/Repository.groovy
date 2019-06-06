@@ -143,10 +143,6 @@ class Repository {
                 registerObject("launcher_job", new LauncherJobFactory(jobRootFolder, getPipelineScript(), "launcher", "Custom job launcher"))
             }
 
-            def registerRepositoryJob = !isParamEmpty(getItemByFullName("RegisterRepository")) ? getItemByFullName("RegisterRepository") : getItemByFullName(jobRootFolder + "/RegisterRepository")
-            if(isParamEmpty(registerRepositoryJob)){
-                registerObject("register_repository_job", new RegisterRepositoryJobFactory(folder, 'RegisterRepository', '', pipelineLibrary, runnerClass))
-            }
             // put into the factories.json all declared jobdsl factories to verify and create/recreate/remove etc
             context.writeFile file: "factories.json", text: JsonOutput.toJson(dslObjects)
 
