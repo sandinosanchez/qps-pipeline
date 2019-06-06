@@ -482,7 +482,9 @@ public class QARunner extends AbstractRunner {
                         logger.info("1111111")
                         logger.info(abortedTestRun.dump())
                         logger.info(currentBuild.rawBuild.dump())
-                        if (!isParamEmpty(abortedTestRun) && !StatusMapper.ZafiraStatus.ABORTED.name().equals(abortedTestRun.status) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
+                        if (!isParamEmpty(abortedTestRun)
+                                && !StatusMapper.ZafiraStatus.ABORTED.name().equals(abortedTestRun.status)
+                                && !BuildResult.ABORTED.name().equals(currentBuild.rawBuild.result) || Configuration.get("notify_slack_on_abort")?.toBoolean()) {
                             zafiraUpdater.sendSlackNotification(uuid, Configuration.get("slack_channels"))
                         }
                     }
