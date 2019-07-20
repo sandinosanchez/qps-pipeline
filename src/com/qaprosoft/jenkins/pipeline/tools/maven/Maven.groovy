@@ -12,6 +12,7 @@ public class Maven {
     public void executeMavenGoals(goals) {
         logger.debug("Maven mixing->executeMavenGoals")
         context.withMaven(
+		mavenOpts: '-Dfile.encoding=UTF-8',
                 //EXPLICIT: Only the Maven publishers explicitly configured in "withMaven(options:...)" are used.
                 publisherStrategy: 'EXPLICIT',
                 // Maven installation declared in the Jenkins "Global Tool Configuration"
@@ -29,6 +30,7 @@ public class Maven {
     public void executeMavenGoals(goals, mavenSettingsConfig) {
         logger.info("Maven mixing->executeMavenGoals")
         context.withMaven(
+		mavenOpts: '-Dfile.encoding=UTF-8',
                 //EXPLICIT: Only the Maven publishers explicitly configured in "withMaven(options:...)" are used.
                 publisherStrategy: 'EXPLICIT',
                 // Maven installation declared in the Jenkins "Global Tool Configuration"
@@ -44,6 +46,7 @@ public class Maven {
     public void executeMavenGoals(goals, mavenSettingsConfig, mavenLocalRepo) {
         logger.info("Maven mixing->executeMavenGoals")
         context.withMaven(
+		mavenOpts: '-Dfile.encoding=UTF-8',
                 //EXPLICIT: Only the Maven publishers explicitly configured in "withMaven(options:...)" are used.
                 publisherStrategy: 'EXPLICIT',
                 // Maven installation declared in the Jenkins "Global Tool Configuration"
