@@ -94,10 +94,10 @@ class TestRailUpdater {
             defaultSearchInterval = searchInterval.toInteger()
         }
         def testRuns = trc.getRuns(Math.round(createdAfter/1000) - 60 * 60 * 24 * defaultSearchInterval, createdBy, milestoneId, projectId, suiteId)
-//        logger.debug("TEST_RUNS:\n" + formatJson(testRuns))
+        logger.debug("TEST_RUNS:\n" + formatJson(testRuns))
 	def testRunId = null
         for(Map testRun in testRuns){
-//            logger.debug("TEST_RUN: " + formatJson(testRun))
+            logger.debug("TEST_RUN: " + formatJson(testRun))
             String correctedName = testRun.name.trim().replaceAll(" +", " ")
             if (correctedName.equals(testRunName)){
                 testRunId = testRun.id
@@ -144,11 +144,11 @@ class TestRailUpdater {
     protected def parseCases(projectId, suiteId){
         Set testRailCaseIds = new HashSet()
         def cases = trc.getCases(projectId, suiteId)
-//        logger.debug("SUITE_CASES: " + formatJson(cases))
+        logger.debug("SUITE_CASES: " + formatJson(cases))
         cases.each { testCase ->
             testRailCaseIds.add(testCase.id)
         }
-//        logger.debug("VALID_CASES: " + formatJson(validTestCases))
+        logger.debug("VALID_CASES: " + formatJson(validTestCases))
         return testRailCaseIds
     }
 
@@ -173,7 +173,7 @@ class TestRailUpdater {
     protected def filterTests(testRunId, assignedToId, testRailCaseIds, testResultMap, caseResultMap){
         Map filteredTestResultMap = testResultMap
         def tests = trc.getTests(testRunId)
-//        logger.debug("TESTS_MAP:\n" + formatJson(tests))
+        logger.debug("TESTS_MAP:\n" + formatJson(tests))
         tests.each { test ->
             for(testRailCaseId in testRailCaseIds){
                 if (testRailCaseId == test.case_id){
@@ -205,7 +205,7 @@ class TestRailUpdater {
 
     protected def addResults(testRunId, testResultMap){
         def response = trc.addResultsForTests(testRunId, testResultMap.values())
-//        logger.debug("ADD_RESULTS_TESTS_RESPONSE: " + formatJson(response))
+        logger.debug("ADD_RESULTS_TESTS_RESPONSE: " + formatJson(response))
     }
     
     protected def parseTagData(integration){
