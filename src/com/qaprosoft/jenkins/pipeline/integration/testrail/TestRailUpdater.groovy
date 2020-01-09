@@ -148,7 +148,6 @@ class TestRailUpdater {
         cases.each { testCase ->
             testRailCaseIds.add(testCase.id)
         }
-        logger.info("VALID_CASES: " + formatJson(validTestCases))
         return testRailCaseIds
     }
 
