@@ -32,10 +32,10 @@ class TestRailUpdater {
 		
         // export all tag related metadata from Zafira
         def integration = zc.exportTagData(uuid, IntegrationTag.TESTRAIL_TESTCASE_UUID)
-        logger.debug("INTEGRATION_INFO:\n" + formatJson(integration))
+        logger.info("INTEGRATION_INFO:\n" + formatJson(integration))
 
         if (isParamEmpty(integration)){
-            logger.debug("Nothing to update in TestRail.")
+            logger.info("Nothing to update in TestRail.")
             return
         }
 
@@ -94,10 +94,10 @@ class TestRailUpdater {
             defaultSearchInterval = searchInterval.toInteger()
         }
         def testRuns = trc.getRuns(Math.round(createdAfter/1000) - 60 * 60 * 24 * defaultSearchInterval, createdBy, milestoneId, projectId, suiteId)
-        logger.debug("TEST_RUNS:\n" + formatJson(testRuns))
+        logger.info("TEST_RUNS:\n" + formatJson(testRuns))
 	def testRunId = null
         for(Map testRun in testRuns){
-            logger.debug("TEST_RUN: " + formatJson(testRun))
+            logger.info("TEST_RUN: " + formatJson(testRun))
             String correctedName = testRun.name.trim().replaceAll(" +", " ")
             if (correctedName.equals(testRunName)){
                 testRunId = testRun.id
@@ -135,7 +135,7 @@ class TestRailUpdater {
     protected def getAssignedToId(testRailAssignee){
         def assignedToId = trc.getUserIdByEmail(testRailAssignee)
         if (isParamEmpty(assignedToId)){
-            logger.debug("No users with such email found!")
+            logger.info("No users with such email found!")
             return
         }
         return assignedToId.id
@@ -144,11 +144,11 @@ class TestRailUpdater {
     protected def parseCases(projectId, suiteId){
         Set testRailCaseIds = new HashSet()
         def cases = trc.getCases(projectId, suiteId)
-        logger.debug("SUITE_CASES: " + formatJson(cases))
+        logger.info("SUITE_CASES: " + formatJson(cases))
         cases.each { testCase ->
             testRailCaseIds.add(testCase.id)
         }
-        logger.debug("VALID_CASES: " + formatJson(validTestCases))
+        logger.info("VALID_CASES: " + formatJson(validTestCases))
         return testRailCaseIds
     }
 
@@ -173,7 +173,7 @@ class TestRailUpdater {
     protected def filterTests(testRunId, assignedToId, testRailCaseIds, testResultMap, caseResultMap){
         Map filteredTestResultMap = testResultMap
         def tests = trc.getTests(testRunId)
-        logger.debug("TESTS_MAP:\n" + formatJson(tests))
+        logger.info("TESTS_MAP:\n" + formatJson(tests))
         tests.each { test ->
             for(testRailCaseId in testRailCaseIds){
                 if (testRailCaseId == test.case_id){
@@ -199,13 +199,13 @@ class TestRailUpdater {
 
     protected def addTestRailRun(testRunName, suiteId, projectId, milestoneId, assignedToId, includeAll, caseResultMap){
         def testRun = trc.addTestRun(suiteId, testRunName, milestoneId, assignedToId, includeAll, caseResultMap.keySet(), projectId)
-        logger.debug("ADDED TESTRUN:\n" + formatJson(testRun))
+        logger.info("ADDED TESTRUN:\n" + formatJson(testRun))
         return testRun
     }
 
     protected def addResults(testRunId, testResultMap){
         def response = trc.addResultsForTests(testRunId, testResultMap.values())
-        logger.debug("ADD_RESULTS_TESTS_RESPONSE: " + formatJson(response))
+        logger.info("ADD_RESULTS_TESTS_RESPONSE: " + formatJson(response))
     }
     
     protected def parseTagData(integration){
