@@ -35,8 +35,8 @@ import javax.xml.parsers.DocumentBuilderFactory;
 
 public class TestNG extends Runner {
 
-    protected def pipelineLibrary = "QPS-Pipeline"
-    protected def runnerClass = "com.qaprosoft.jenkins.pipeline.runner.maven.TestNG"
+    protected def pipelineLibrary = Configuration.get(pipelineLibrary)
+    protected def runnerClass = Configuration.get(runnerClass)
     protected def onlyUpdated = false
     protected def uuid
     protected ZafiraUpdater zafiraUpdater
