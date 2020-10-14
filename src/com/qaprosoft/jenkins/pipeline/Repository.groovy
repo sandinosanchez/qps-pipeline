@@ -47,6 +47,27 @@ class Repository extends BaseObject {
         logger.info("Repository->register")
         Configuration.set("GITHUB_ORGANIZATION", Configuration.get(SCM_ORG))
         Configuration.set("GITHUB_HOST", Configuration.get(SCM_HOST))
+
+        this.scmHost = Configuration.get(SCM_HOST)
+        this.scmOrg = Configuration.get(SCM_ORG)
+        this.repo = Configuration.get(REPO)
+        this.branch = Configuration.get(BRANCH)
+
+        logger.info("scmHost: " + scmHost)
+        logger.info("scmOrg: " + scmOrg)
+        logger.info("repo: " + repo)
+        logger.info("branch: " + branch)
+
+        switch (scmHost) {
+            case ~/^.*github.*$/:
+                this.setScm(new GitHub(context, scmHost, scmOrg, repo, branch))
+                break
+            case ~/^.*gitlab.*$/:
+                this.setScm(new Gitlab(context, scmHost, scmOrg, repo, branch))
+                break
+            case ~/^.*bitbucket.*$/:
+                this.setScm(new BitBucket(context, scmHost, scmOrg, repo, branch))
+        }
         context.node('master') {
             context.timestamps {
                 prepare()
@@ -92,26 +113,6 @@ class Repository extends BaseObject {
 
 
     private void generateCiItems() {
-        this.scmHost = Configuration.get(SCM_HOST)
-        this.scmOrg = Configuration.get(SCM_ORG)
-        this.repo = Configuration.get(REPO)
-        this.branch = Configuration.get(BRANCH)
-
-        logger.info("scmHost: " + scmHost)
-        logger.info("scmOrg: " + scmOrg)
-        logger.info("repo: " + repo)
-        logger.info("branch: " + branch)
-
-        switch (scmHost) {
-            case ~/^.*github.*$/:
-                this.setScm(new GitHub(context, scmHost, scmOrg, repo, branch))
-                break
-            case ~/^.*gitlab.*$/:
-                this.setScm(new Gitlab(context, scmHost, scmOrg, repo, branch))
-                break
-            case ~/^.*bitbucket.*$/:
-                this.setScm(new BitBucket(context, scmHost, scmOrg, repo, branch))
-        }
         context.stage("Create Repository") {
             def buildNumber = Configuration.get(Configuration.Parameter.BUILD_NUMBER)
             def repoFolder = Configuration.get(REPO)
