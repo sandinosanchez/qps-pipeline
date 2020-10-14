@@ -197,9 +197,6 @@ class Repository extends BaseObject {
 
             // WebHooks related jobs
             registerObject("pull_request_job", new PullRequestJobFactory(repoFolder, getOnPullRequestScript(), "onPullRequest-" + Configuration.get(REPO), pullRequestPipelineJobDescription, scmHost, scmOrg, Configuration.get(REPO), gitUrl, scmWebHookArgs))
-            registerObject("push_job", new PushJobFactory(repoFolder, getOnPushScript(), "onPush-" + Configuration.get(REPO), pushJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, userId, isTestNgRunner, zafiraFields. scmWebHookArgs))
-
-
             
             if (!'QPS-Pipeline'.equals(this.pipelineLibrary)) {
                 //load custom library to check inheritance for isTestNGRunner
@@ -208,6 +205,8 @@ class Repository extends BaseObject {
 
             def isTestNgRunner = extendsClass([TestNG])
             def isBuildToolDependent = extendsClass([com.qaprosoft.jenkins.pipeline.runner.maven.Runner, com.qaprosoft.jenkins.pipeline.runner.gradle.Runner, com.qaprosoft.jenkins.pipeline.runner.docker.Runner])
+
+            registerObject("push_job", new PushJobFactory(repoFolder, getOnPushScript(), "onPush-" + Configuration.get(REPO), pushJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, userId, isTestNgRunner, zafiraFields. scmWebHookArgs))
 
             def mergeJobDescription = "SCM branch merger job"
             registerObject("merge_job", new MergeJobFactory(repoFolder, getMergeScript(), "CutBranch-" + Configuration.get(REPO), mergeJobDescription, scmHost, scmOrg, Configuration.get(REPO), gitUrl))
