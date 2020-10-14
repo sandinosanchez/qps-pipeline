@@ -2,9 +2,12 @@ package com.qaprosoft.jenkins.pipeline.runner
 
 import com.qaprosoft.jenkins.BaseObject
 import com.qaprosoft.jenkins.pipeline.integration.sonar.SonarClient
+import com.qaprosoft.jenkins.pipeline.Configuration
+import com.qaprosoft.jenkins.pipeline.tools.scm.github.GitHub
+import com.qaprosoft.jenkins.pipeline.tools.scm.gitlab.Gitlab
+import com.qaprosoft.jenkins.pipeline.tools.scm.bitbucket.BitBucket
 import java.nio.file.Paths
 
-import com.qaprosoft.jenkins.pipeline.Configuration
 import static com.qaprosoft.jenkins.Utils.*
 import static com.qaprosoft.jenkins.pipeline.Executor.*
 
@@ -16,9 +19,24 @@ public abstract class AbstractRunner extends BaseObject {
 
     public AbstractRunner(context) {
         super(context)
-        
         sc = new SonarClient(context)
-        
+
+        def host = Configration.get("scmHost")
+        def org = Configration.get("scmOrg")
+        def repo = Configration.get("repo")
+        def branch = Configration.get("branch")
+
+        switch (host.toLowerCase()) {
+            case ~/^.*github.*$/:
+                this.setScm(new GitHub(context, host, org, repo, branch))
+                break
+            case ~/^.*gitlab.*$/:
+                this.setScm(new Gitlab(context, host, org, repo, branch))
+                break
+            case ~/^.*bitbucket.*$/:
+                this.setScm(new BitBucket(context, host, org, repo, branch))
+        }
+
         initOrganization()
         setDisplayNameTemplate('#${BUILD_NUMBER}|${branch}')
     }
@@ -30,10 +48,6 @@ public abstract class AbstractRunner extends BaseObject {
     abstract public void onPush()
 
     abstract public void onPullRequest()
-
-    /*
-     * Execute custom pipeline/jobdsl steps from Jenkinsfile
-     */
     
     @NonCPS
     public def setSshClient() {
@@ -41,6 +55,7 @@ public abstract class AbstractRunner extends BaseObject {
         super.setSshClient()
     }
 
+    // Execute custom pipeline/jobdsl steps from Jenkinsfile     
     protected void jenkinsFileScan() {
         def isCustomPipelineEnabled = getToken(Configuration.CREDS_CUSTOM_PIPELINE)
 
