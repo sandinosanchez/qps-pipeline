@@ -181,13 +181,13 @@ class Repository extends BaseObject {
 
             switch (scmHost) {
                 case ~/^.*github.*$/:
-                    scmWebHookArgs = GitHub.getWebHookArgs(GitHub.HookArgs)
+                    scmWebHookArgs = GitHub.getWebHookArgsAsMap(GitHub.HookArgs)
                     break
                 case ~/^.*gitlab.*$/:
-                    scmWebHookArgs = Gitlab.getWebHookArgs(Gitlab.HookArgs)
+                    scmWebHookArgs = Gitlab.getWebHookArgsAsMap(Gitlab.HookArgs)
                     break
                 case ~/^.*bitbucket.*$/:
-                    scmWebHookArgs = BitBucket.getWebHookArgs(BitBucket.HookArgs)
+                    scmWebHookArgs = BitBucket.getWebHookArgsAsMap(BitBucket.HookArgs)
                     break
             }
 
