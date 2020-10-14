@@ -60,10 +60,10 @@ class Repository extends BaseObject {
 
         switch (scmHost) {
             case ~/^.*github.*$/:
-                this.scmclient = new GitHub(context, scmHost, scmOrg, repo, branch)
+                this.scmClient = new GitHub(context, scmHost, scmOrg, repo, branch)
                 break
             case ~/^.*gitlab.*$/:
-                this.scmclient = new Gitlab(context, scmHost, scmOrg, repo, branch)
+                this.scmClient = new Gitlab(context, scmHost, scmOrg, repo, branch)
                 break
             case ~/^.*bitbucket.*$/:
                 this.scmClient = new BitBucket(context, scmHost, scmOrg, repo, branch)
