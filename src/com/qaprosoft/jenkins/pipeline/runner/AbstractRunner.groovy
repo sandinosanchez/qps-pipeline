@@ -21,10 +21,10 @@ public abstract class AbstractRunner extends BaseObject {
         super(context)
         sc = new SonarClient(context)
 
-        def host = Configration.get("scmHost")
-        def org = Configration.get("scmOrg")
-        def repo = Configration.get("repo")
-        def branch = Configration.get("branch")
+        def host = Configuration.get("scmHost")
+        def org = Configuration.get("scmOrg")
+        def repo = Configuration.get("repo")
+        def branch = Configuration.get("branch")
 
         switch (host.toLowerCase()) {
             case ~/^.*github.*$/:
