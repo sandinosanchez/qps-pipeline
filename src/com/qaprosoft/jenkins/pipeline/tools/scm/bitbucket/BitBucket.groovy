@@ -23,8 +23,8 @@ class BitBucket extends Scm {
         PR_REPO("prRepo", "\$.pullrequest.destination.repository.name"),
         PR_SOURCE_BRANCH("prSourceBranch", "\$.pullrequest.source.branch.name"),
         PR_TARGET_BRANCH("prTargetBranch", "\$.pullrequest.destination.branch.name"),
-        PR_FILTER_REGEX("filterExpression", "^(pullrequest:(created|updated))*?\$"),
-        PR_FILTER_TEXT("filterText", "x_gitlab_event"),
+        PR_FILTER_REGEX("prFilterExpression", "^(pullrequest:(created|updated))*?\$"),
+        PR_FILTER_TEXT("prFilterText", "x_gitlab_event"),
         PR_ACTION("prAction", ""),
         PR_SHA("prSha", ""),
 

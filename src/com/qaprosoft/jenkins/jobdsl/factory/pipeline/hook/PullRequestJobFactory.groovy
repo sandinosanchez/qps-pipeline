@@ -83,7 +83,7 @@ public class PullRequestJobFactory extends PipelineFactory {
                             printPostContent(true)
                             silentResponse(false)
                             regexpFilterText(webHookArgs.prFilterText)
-                            regexpFilterExpression(prFilterRegex)
+                            regexpFilterExpression(webHookArgs.prFilterExpression)
                         }
                     }
                 }
