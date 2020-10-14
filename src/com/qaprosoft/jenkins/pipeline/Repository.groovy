@@ -181,13 +181,13 @@ class Repository extends BaseObject {
 
             switch (scmHost) {
                 case ~/^.*github.*$/:
-                    scmWebHookArgs = GitHub.getHookArgsAsMap(GitHub.HookArgs)
+                    this.scmWebHookArgs = GitHub.getHookArgsAsMap(GitHub.HookArgs)
                     break
                 case ~/^.*gitlab.*$/:
-                    scmWebHookArgs = Gitlab.getHookArgsAsMap(Gitlab.HookArgs)
+                    this.scmWebHookArgs = Gitlab.getHookArgsAsMap(Gitlab.HookArgs)
                     break
                 case ~/^.*bitbucket.*$/:
-                    scmWebHookArgs = BitBucket.getHookArgsAsMap(BitBucket.HookArgs)
+                    this.scmWebHookArgs = BitBucket.getHookArgsAsMap(BitBucket.HookArgs)
                     break
             }
 
@@ -196,7 +196,7 @@ class Repository extends BaseObject {
                     "- Select application/json in \"Content Type\" field\n- Tick \"Send me everything.\" option\n- Click \"Add webhook\" button"
 
             // WebHooks related jobs
-            registerObject("pull_request_job", new PullRequestJobFactory(repoFolder, getOnPullRequestScript(), "onPullRequest-" + Configuration.get(REPO), pullRequestPipelineJobDescription, scmHost, scmOrg, Configuration.get(REPO), gitUrl, scmWebHookArgs))
+            registerObject("pull_request_job", new PullRequestJobFactory(repoFolder, getOnPullRequestScript(), "onPullRequest-" + Configuration.get(REPO), pullRequestPipelineJobDescription, scmHost, scmOrg, Configuration.get(REPO), gitUrl, this.scmWebHookArgs))
             
             if (!'QPS-Pipeline'.equals(this.pipelineLibrary)) {
                 //load custom library to check inheritance for isTestNGRunner
@@ -206,7 +206,7 @@ class Repository extends BaseObject {
             def isTestNgRunner = extendsClass([TestNG])
             def isBuildToolDependent = extendsClass([com.qaprosoft.jenkins.pipeline.runner.maven.Runner, com.qaprosoft.jenkins.pipeline.runner.gradle.Runner, com.qaprosoft.jenkins.pipeline.runner.docker.Runner])
 
-            registerObject("push_job", new PushJobFactory(repoFolder, getOnPushScript(), "onPush-" + Configuration.get(REPO), pushJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, userId, isTestNgRunner, zafiraFields. scmWebHookArgs))
+            registerObject("push_job", new PushJobFactory(repoFolder, getOnPushScript(), "onPush-" + Configuration.get(REPO), pushJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, userId, isTestNgRunner, zafiraFields. this.scmWebHookArgs))
 
             def mergeJobDescription = "SCM branch merger job"
             registerObject("merge_job", new MergeJobFactory(repoFolder, getMergeScript(), "CutBranch-" + Configuration.get(REPO), mergeJobDescription, scmHost, scmOrg, Configuration.get(REPO), gitUrl))
