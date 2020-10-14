@@ -159,13 +159,6 @@ class Repository extends BaseObject {
             //Job build display name
             context.currentBuild.displayName = "#${buildNumber}|${Configuration.get(REPO)}|${Configuration.get(BRANCH)}"
 
-<<<<<<< HEAD
-            def githubHost = Configuration.get(SCM_HOST)
-            def githubOrganization = Configuration.get(SCM_ORG)
-=======
-//			createPRChecker(credentialsId)
->>>>>>> cf7c0000690823379ca311a40b11875f5089d1e0
-
             registerObject("project_folder", new FolderFactory(repoFolder, ""))
             // TODO: move folder and main trigger job creation onto the createRepository method
 
@@ -220,28 +213,17 @@ class Repository extends BaseObject {
                 def buildTool = determineBuildTool()
                 def isDockerRunner = false
 
-<<<<<<< HEAD
                 if (extendsClass([com.qaprosoft.jenkins.pipeline.runner.docker.Runner])) {
-                    if (isParamEmpty(getCredentials(githubOrganization + '-docker'))) {
-                        updateJenkinsCredentials(githubOrganization + '-docker', 'docker hub creds', Configuration.Parameter.DOCKER_HUB_USERNAME.getValue(), Configuration.Parameter.DOCKER_HUB_PASSWORD.getValue())
-                    }
-
-=======
-                if (runnerClass.contains('docker.Runner')) {
                     if (isParamEmpty(getCredentials(scmOrg + '-docker'))) {
                         updateJenkinsCredentials(scmOrg + '-docker', 'docker hub creds', Configuration.Parameter.DOCKER_HUB_USERNAME.getValue(), Configuration.Parameter.DOCKER_HUB_PASSWORD.getValue())
-                    } 
->>>>>>> cf7c0000690823379ca311a40b11875f5089d1e0
+                    }
+
                     isDockerRunner = true
-                    registerObject("deploy_job", new DeployJobFactory(repoFolder, getDeployScript(), "deploy", githubHost, githubOrganization, Configuration.get(REPO)))
-                    registerObject("publish_job", new PublishJobFactory(repoFolder, getPublishScript(), "publish", githubHost, githubOrganization, Configuration.get(REPO), Configuration.get(BRANCH)))
+                    registerObject("deploy_job", new DeployJobFactory(repoFolder, getDeployScript(), "deploy", scmHost, scmOrg, Configuration.get(REPO)))
+                    registerObject("publish_job", new PublishJobFactory(repoFolder, getPublishScript(), "publish", scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH)))
                 }
 
-<<<<<<< HEAD
-                registerObject("build_job", new BuildJobFactory(repoFolder, getPipelineScript(), "build", githubHost, githubOrganization, Configuration.get(REPO), Configuration.get(BRANCH), buildTool, isDockerRunner))
-=======
-                registerObject("build_job", new BuildJobFactory(repoFolder, getPipelineScript(), "Build", scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, buildTool, isDockerRunner))
->>>>>>> cf7c0000690823379ca311a40b11875f5089d1e0
+                registerObject("build_job", new BuildJobFactory(repoFolder, getPipelineScript(), "build", scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), buildTool, isDockerRunner))
             }
 
             factoryRunner.run(dslObjects)
