@@ -41,26 +41,6 @@ class Repository extends BaseObject {
         super(context)
         this.pipelineLibrary = Configuration.get("pipelineLibrary")
         this.runnerClass = Configuration.get("runnerClass")
-        this.scmHost = Configuration.get(SCM_HOST)
-        this.scmOrg = Configuration.get(SCM_ORG)
-        this.repo = Configuration.get(REPO)
-        this.branch = Configuration.get(BRANCH)
-
-        // logger.info("scmHost: " + scmHost)
-        // logger.info("scmOrg: " + scmOrg)
-        // logger.info("repo: " + repo)
-        // logger.info("branch: " + branch)
-
-        switch (scmHost) {
-            case ~/^.*github.*$/:
-                this.setScm(new GitHub(context, scmHost, scmOrg, repo, branch))
-                break
-            case ~/^.*gitlab.*$/:
-                this.setScm(new Gitlab(context, scmHost, scmOrg, repo, branch))
-                break
-            case ~/^.*bitbucket.*$/:
-                this.setScm(new BitBucket(context, scmHost, scmOrg, repo, branch))
-        }
     }
 
     public void register() {
@@ -112,6 +92,26 @@ class Repository extends BaseObject {
 
 
     private void generateCiItems() {
+        this.scmHost = Configuration.get(SCM_HOST)
+        this.scmOrg = Configuration.get(SCM_ORG)
+        this.repo = Configuration.get(REPO)
+        this.branch = Configuration.get(BRANCH)
+
+        // logger.info("scmHost: " + scmHost)
+        // logger.info("scmOrg: " + scmOrg)
+        // logger.info("repo: " + repo)
+        // logger.info("branch: " + branch)
+
+        switch (scmHost) {
+            case ~/^.*github.*$/:
+                this.setScm(new GitHub(context, scmHost, scmOrg, repo, branch))
+                break
+            case ~/^.*gitlab.*$/:
+                this.setScm(new Gitlab(context, scmHost, scmOrg, repo, branch))
+                break
+            case ~/^.*bitbucket.*$/:
+                this.setScm(new BitBucket(context, scmHost, scmOrg, repo, branch))
+        }
         context.stage("Create Repository") {
             def buildNumber = Configuration.get(Configuration.Parameter.BUILD_NUMBER)
             def repoFolder = Configuration.get(REPO)
