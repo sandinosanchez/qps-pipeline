@@ -3,16 +3,16 @@ package com.qaprosoft.jenkins.jobdsl.factory.pipeline
 import groovy.transform.InheritConstructors
 
 @InheritConstructors
-public class BuildJobFactory extends PipelineFactory {
+class BuildJobFactory extends PipelineFactory {
 
     def host
     def repo
     def organization
     def branch
-    def scmUrl
+    def isDockerRepo
+    def buildTool
 
-
-    public BuildJobFactory(folder, pipelineScript, jobName, host, organization, repo, branch, scmUrl) {
+    public BuildJobFactory(folder, pipelineScript, jobName, host, organization, repo, branch, buildTool, isDockerRepo=false) {
         this.name = jobName
         this.folder = folder
         this.pipelineScript = pipelineScript
@@ -20,7 +20,8 @@ public class BuildJobFactory extends PipelineFactory {
         this.repo = repo
         this.organization = organization
         this.branch = branch
-        this.scmUrl = scmUrl
+        this.buildTool = buildTool
+        this.isDockerRepo = isDockerRepo
     }
 
     def create() {
@@ -31,14 +32,31 @@ public class BuildJobFactory extends PipelineFactory {
         pipelineJob.with {
 
             parameters {
-                configure stringParam('maven_goals', '-U clean install', "Maven goals to build the project")
+
+                // dockerBuild params
+                if (isDockerRepo) {
+                    configure stringParam('RELEASE_VERSION', '', 'SemVer-compliant upcoming release or RC version (e.g. 1.13.1 or 1.13.1.RC1)')
+                    configure addExtensibleChoice('RELEASE_TYPE', 'gc_RELEASE_TYPE', 'Component release type', 'SNAPSHOT')
+                    configure stringParam('DOCKERFILE', 'Dockerfile', 'Relative path to your dockerfile')
+                    configure addHiddenParameter('build_tool', '', "${this.buildTool}")
+                }
+
+                switch (buildTool.toLowerCase()) {
+                    case "maven":
+                        configure stringParam('maven_goals', '-U clean install', 'Maven goals to build the project')
+                        break
+                    case "gradle":
+                        configure stringParam('gradle_tasks', 'clean build', 'Gradle tasks to build the project')
+                        break
+                }
+
+                configure stringParam('branch', branch, "SCM repository branch containing sources for component build")
                 configure booleanParam('fork', false, "Reuse forked repository for ${repo}.")
-                configure stringParam('branch', branch, "SCM repository branch to build against")
+                configure addExtensibleChoice('BuildPriority', "gc_BUILD_PRIORITY", "Priority of execution. Lower number means higher priority", "3")
+                configure stringParam('email_list', "", 'List of Users to be emailed after the build')
                 configure addHiddenParameter('repo', '', repo)
                 configure addHiddenParameter('GITHUB_HOST', '', host)
                 configure addHiddenParameter('GITHUB_ORGANIZATION', '', organization)
-                configure addExtensibleChoice('BuildPriority', "gc_BUILD_PRIORITY", "Priority of execution. Lower number means higher priority", "3")
-                configure stringParam('email_list', "", 'List of Users to be emailed after the test')
             }
 
         }

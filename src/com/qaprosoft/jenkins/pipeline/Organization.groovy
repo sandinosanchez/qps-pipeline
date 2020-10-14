@@ -47,6 +47,8 @@ class Organization extends BaseObject {
 
     public def register() {
         logger.info("Organization->register")
+        setDisplayNameTemplate('#${BUILD_NUMBER}|${folderName}')
+        currentBuild.displayName = getDisplayName()
         context.node('master') {
             context.timestamps {
                 generateCreds()
@@ -246,13 +248,7 @@ class Organization extends BaseObject {
     }
 
     protected String getPipelineScript() {
-        return "@Library(\'${PIPELINE_LIBRARY}\')\nimport ${RUNNER_CLASS};\nnew ${RUNNER_CLASS}(this).build()"
-    }
-
-    protected clean() {
-        context.stage('Wipe out Workspace') {
-            context.deleteDir()
-        }
+        return "@Library(\'${PIPELINE_LIBRARY}\')\nimport ${RUNNER_CLASS};\nnew ${RUNNER_CLASS}(this).runJob()"
     }
 
     protected String getTestRailScript() {
@@ -270,7 +266,6 @@ class Organization extends BaseObject {
 
         if (!isParamEmpty(this.reportingServiceUrl) && !isParamEmpty(this.reportingAccessToken)) {
             registerReportingCredentials(this.folderName, this.reportingServiceUrl, this.reportingAccessToken)
-            registerSonarGithubOAuth(this.folderName, this.sonarGithubOAuth)
         }
 
         if (customPipeline?.toBoolean()) {
@@ -292,6 +287,8 @@ class Organization extends BaseObject {
     }
 
     protected def registerHubCredentials(orgFolderName, provider, url) {
+        setDisplayNameTemplate('#${BUILD_NUMBER}|${folderName}|${provider}')
+        currentBuild.displayName = getDisplayName()
         if (isParamEmpty(url)) {
             throw new RuntimeException("Required 'url' field is missing!")
         }
@@ -300,8 +297,13 @@ class Organization extends BaseObject {
             hubURLCredName = "${orgFolderName}" + "-" + hubURLCredName
         }
 
-        if (updateJenkinsCredentials(hubURLCredName, "${provider} URL", Configuration.Parameter.SELENIUM_URL.getKey(), url)) {
-            logger.info("${hubURLCredName} was successfully registered.")
+        if (isParamEmpty(getCredentials(hubURLCredName))) {
+            if (updateJenkinsCredentials(hubURLCredName, "${provider} URL", Configuration.Parameter.SELENIUM_URL.getKey(), url)) {
+                logger.info("${hubURLCredName} was successfully registered.")
+            }
+        }
+        else {
+            logger.info("Skip registration of ${hubURLCredName}")
         }
     }
 
@@ -384,16 +386,6 @@ class Organization extends BaseObject {
         registerObject("qtest_job", new QTestJobFactory(orgFolderName, getQTestScript(), Configuration.QTEST_UPDATER_JOBNAME, "Custom job qtest"))
 
         factoryRunner.run(dslObjects)
-    }
-
-    public static void registerSonarGithubOAuth(orgFolderName, token) {
-        def sonarGithubOAuth = Configuration.CREDS_SONAR_GITHUB_OAUTH_TOKEN
-
-        if (!isParamEmpty(orgFolderName)) {
-            sonarGithubOAuth = orgFolderName + "-" + sonarGithubOAuth
-        }
-
-        updateJenkinsCredentials(sonarGithubOAuth, "Sonar GithubOAuth token", Configuration.Parameter.SONAR_GITHUB_OAUTH_TOKEN.getKey(), token)
     }
 
     protected def registerCustomPipelineCreds(orgFolderName, token) {

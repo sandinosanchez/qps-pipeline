@@ -10,11 +10,11 @@ public class Configuration {
 
     public final static def CREDS_REPORTING_SERVICE_URL = "reporting_service_url"
     public final static def CREDS_REPORTING_ACCESS_TOKEN = "reporting_access_token"
+    
     public final static def CREDS_TESTRAIL_SERVICE_URL = "testrail_service_url"
     public final static def CREDS_TESTRAIL = "testrail_creds"
     public final static def CREDS_QTEST_SERVICE_URL = "qtest_service_url"
     public final static def CREDS_QTEST_ACCESS_TOKEN = "qtest_token"
-    public final static def CREDS_SONAR_GITHUB_OAUTH_TOKEN = "sonar_github_oauth_token"
     public final static def CREDS_CUSTOM_PIPELINE = "jenkinsfile"
 
     public final static def TESTRAIL_UPDATER_JOBNAME = "testrail-updater"
@@ -26,7 +26,6 @@ public class Configuration {
     protected static Map params = [:]
     //list of required goals vars which must present in command line obligatory
     protected static Map vars = [:]
-
 
     // example of the logging for static @NonCPS calls
     //private static String del = ""
@@ -70,8 +69,8 @@ public class Configuration {
 
         INFRA_HOST("INFRA_HOST", "demo.qaprosoft.com"),
 
-        SELENIUM_URL("SELENIUM_URL", mustOverride, true),
-        HUB_MODE("hub_mode", "selenium"),
+        SELENIUM_URL("SELENIUM_URL", "http://demo:demo@\${INFRA_HOST}/selenoid/wd/hub", true),
+        PROVIDER("capabilities.provider", "selenium"),
 
         REPORTING_ACCESS_TOKEN("REPORTING_ACCESS_TOKEN", mustOverride, true),
         REPORTING_SERVICE_URL("REPORTING_SERVICE_URL", mustOverride),
@@ -88,7 +87,6 @@ public class Configuration {
         SCREEN_RECORD_DURATION("screen_record_duration", "1800"),
 
         S3_SAVE_SCREENSHOTS("s3_save_screenshots", "true"),
-        OPTIMIZE_VIDEO_RECORDING("optimize_video_recording", "false"),
 
         VNC_DESKTOP("vnc_desktop", "%s://%s:%s/vnc/%s"),
         VNC_MOBILE("vnc_mobile", "%s://%s:%s/websockify"),
@@ -111,14 +109,12 @@ public class Configuration {
         TESTRAIL_SERVICE_URL("TESTRAIL_SERVICE_URL", ""), // "https://<CHANGE_ME>.testrail.com?/api/v2/"
         TESTRAIL_USERNAME("TESTRAIL_USERNAME", ""),
         TESTRAIL_PASSWORD("TESTRAIL_PASSWORD", "", true),
-        TESTRAIL_ENABLE("testrail_enabled", "false"),
 
         QTEST_SERVICE_URL("QTEST_SERVICE_URL", ""), // "https://<CHANGE_ME>/api/v3/"
         QTEST_ACCESS_TOKEN("QTEST_ACCESS_TOKEN", "", true),
-        QTEST_ENABLE("qtest_enabled", "false"),
 
-        //TODO:  reorganize logic to operate with tokens without Configuration enum!
-        SONAR_GITHUB_OAUTH_TOKEN("SONAR_GITHUB_OAUTH_TOKEN", "", true)
+        DOCKER_HUB_USERNAME("DOCKER_HUB_USERNAME", mustOverride),
+        DOCKER_HUB_PASSWORD("DOCKER_HUB_PASSWORD", mustOverride)
 
         private final String key
         private final String value

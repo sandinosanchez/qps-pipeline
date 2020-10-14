@@ -123,6 +123,11 @@ public class TestJobFactory extends PipelineFactory {
                         booleanParam('enableVideo', enableVideo, 'Enable video recording')
                         configure stringParam('capabilities', getSuiteParameter("platformName=ANDROID;deviceName=" + defaultMobilePool, "capabilities", currentSuite), 'Reserved for any semicolon separated W3C driver capabilities.')
                         break
+                    case "android-tv":
+                        booleanParam('auto_screenshot', autoScreenshot, 'Generate screenshots automatically during the test')
+                        booleanParam('enableVideo', enableVideo, 'Enable video recording')
+                        configure stringParam('capabilities', getSuiteParameter("platformName=ANDROID;deviceName=" + defaultMobilePool, "capabilities", currentSuite), 'Reserved for any semicolon separated W3C driver capabilities.')
+                        break
                     case "android-web":
                         booleanParam('auto_screenshot', autoScreenshot, 'Generate screenshots automatically during the test')
                         booleanParam('enableVideo', enableVideo, 'Enable video recording')
@@ -167,6 +172,7 @@ public class TestJobFactory extends PipelineFactory {
                 configure addHiddenParameter('ci_parent_url', '', '')
                 configure addHiddenParameter('ci_parent_build', '', '')
                 configure addHiddenParameter('slack_channels', '', getSuiteParameter("", "jenkinsSlackChannels", currentSuite))
+                configure addHiddenParameter('failure_slack_channels', '', getSuiteParameter("", "jenkinsFailedSlackChannels", currentSuite))
                 configure addExtensibleChoice('ci_run_id', '', 'import static java.util.UUID.randomUUID\nreturn [randomUUID()]')
                 configure addExtensibleChoice('BuildPriority', "gc_BUILD_PRIORITY", "Priority of execution. Lower number means higher priority", "3")
                 configure addHiddenParameter('queue_registration', '', getSuiteParameter("true", "jenkinsQueueRegistration", currentSuite))

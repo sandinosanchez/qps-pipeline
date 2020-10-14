@@ -1,6 +1,7 @@
 package com.qaprosoft.jenkins.pipeline.runner
 
 import com.qaprosoft.jenkins.BaseObject
+import com.qaprosoft.jenkins.pipeline.integration.sonar.SonarClient
 import java.nio.file.Paths
 
 import com.qaprosoft.jenkins.pipeline.Configuration
@@ -8,27 +9,18 @@ import static com.qaprosoft.jenkins.Utils.*
 import static com.qaprosoft.jenkins.pipeline.Executor.*
 
 public abstract class AbstractRunner extends BaseObject {
+    SonarClient sc
+    
     // organization folder name of the current job/runner
     protected String organization = ""
-    protected String displayNameTemplate = '#${BUILD_NUMBER}|${branch}'
-    protected final String DISPLAY_NAME_SEPARATOR = "|"
 
     public AbstractRunner(context) {
         super(context)
+        
+        sc = new SonarClient(context)
+        
         initOrganization()
         setDisplayNameTemplate('#${BUILD_NUMBER}|${branch}')
-    }
-
-    protected String getDisplayName() {
-        def String displayName = Configuration.resolveVars(this.displayNameTemplate)
-        displayName = displayName.replaceAll("(?i)null", '')
-        displayName = replaceMultipleSymbolsToOne(displayName, DISPLAY_NAME_SEPARATOR)
-        return displayName
-    }
-
-    @NonCPS
-    protected void setDisplayNameTemplate(String template) {
-        this.displayNameTemplate = template
     }
 
     //Methods
@@ -42,6 +34,12 @@ public abstract class AbstractRunner extends BaseObject {
     /*
      * Execute custom pipeline/jobdsl steps from Jenkinsfile
      */
+    
+    @NonCPS
+    public def setSshClient() {
+        sc.setSshClient()
+        super.setSshClient()
+    }
 
     protected void jenkinsFileScan() {
         def isCustomPipelineEnabled = getToken(Configuration.CREDS_CUSTOM_PIPELINE)
@@ -83,8 +81,8 @@ public abstract class AbstractRunner extends BaseObject {
         int nameCount = Paths.get(jobName).getNameCount()
 
         def orgFolderName = ""
-        if (nameCount == 1 && (jobName.contains("qtest-updater") || jobName.contains("testrail-updater"))) {
-            // testrail-updater - i.e. stage
+        if (nameCount == 1 && (jobName.contains("qtest-updater") || jobName.contains("testrail-updater") || jobName.contains("launcher") || jobName.contains("RegisterRepository"))) {
+            // testrail-updater - i.e. empty org name
             orgFolderName = ""
         } else if (nameCount == 2 && (jobName.contains("qtest-updater") || jobName.contains("testrail-updater"))) {
             // stage/testrail-updater - i.e. stage
