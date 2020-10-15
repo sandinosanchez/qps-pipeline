@@ -24,7 +24,7 @@ class BitBucket extends Scm {
         PR_SOURCE_BRANCH("prSourceBranch", "\$.pullrequest.source.branch.name"),
         PR_TARGET_BRANCH("prTargetBranch", "\$.pullrequest.destination.branch.name"),
         PR_FILTER_REGEX("prFilterExpression", "^(pullrequest:(created|updated))*?\$"),
-        PR_FILTER_TEXT("prFilterText", "$x_event_key"),
+        PR_FILTER_TEXT("prFilterText", "\$x_event_key"),
 
         PUSH_FILTER_TEXT("pushFilterText", "\$ref x-event-key"),
         PUSH_FILTER_REGEX("pushFilterRegex", "^(master\\srepo:push)*?\$"),
