@@ -7,6 +7,7 @@ class Gitlab extends Scm {
     Gitlab(context, host, org, repo, branch) {
         super(context, host, org, repo, branch)
         this.prRefSpec = "+refs/merge-requests/*:refs/remotes/merge-requests/pr/*"
+        logger.info("constructorBranch: " + this.branch)
         this.branchSpec = "${this.branch}"
     }
 
