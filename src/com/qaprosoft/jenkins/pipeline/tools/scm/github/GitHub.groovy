@@ -46,6 +46,7 @@ class GitHub extends Scm {
 
     @Override
     protected String getBranchSpec(spec) {
+        logger.info("BranchGitlab: " + this.branch)
         return String.format(branchSpec, spec)
     }
 
