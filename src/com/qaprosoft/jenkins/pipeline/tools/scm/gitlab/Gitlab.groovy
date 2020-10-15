@@ -43,4 +43,9 @@ class Gitlab extends Scm {
         public String getValue() { return value }
     }
 
+    @Override
+    protected String getBranchSpec(spec) {
+        return String.format(branchSpec, branch)
+    }
+
 }
