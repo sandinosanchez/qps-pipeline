@@ -15,23 +15,21 @@ class GitHub extends Scm {
     }
 
     enum HookArgs {
-        // global
         HEADER_EVENT_NAME("eventName", "x-github-event"),
 
-        // pr
+        PR_ACTION("prAction", "\$.action"),
+        PR_SHA("prSha", "\$.pull_request.head.sha"),
         PR_NUMBER("prNumber", "\$.number"),
         PR_REPO("prRepo", "\$.pull_request.base.repo.name"),
         PR_SOURCE_BRANCH("prSourceBranch", "\$.pull_request.head.ref"),
         PR_TARGET_BRANCH("prTargetBranch", "\$.pull_request.base.ref"),
-        PR_SHA("prSha", "\$.pull_request.head.sha"),
-        PR_ACTION("prAction", "\$.action"),
         PR_FILTER_REGEX("prFilterExpression", "^((opened|reopened)\\spull_request)*?\$"),
-        PR_FILTER_TEXT("prFilterText", "\$pr_action x_github_event"),
+        PR_FILTER_TEXT("prFilterText", "\$pr_action $x_github_event"),
 
-        // push
-        REF_JSON_PATH("refJsonPath", "\$.ref"),
+        
         PUSH_FILTER_TEXT("pushFilterText", "\$ref x_github_event"),
-        PUSH_FILTER_REGEX("pushFilterRegex", "^(refs/heads/master\\spush)*?\$")
+        PUSH_FILTER_REGEX("pushFilterRegex", "^(refs/heads/master\\spush)*?\$"),
+        REF_JSON_PATH("refJsonPath", "\$.ref")
 
 
         private final String key

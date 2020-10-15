@@ -15,23 +15,20 @@ class Gitlab extends Scm {
     }
 
     enum HookArgs {
-        // global
         HEADER_EVENT_NAME("eventName", "x-gitlab-event"),
 
-        // pr
+        PR_ACTION("prAction", "\$.object_attributes.state"),
+        PR_SHA("prSha", "\$.object_attributes.last_commit.id"),
         PR_NUMBER("prNumber", "\$.object_attributes.iid"),
         PR_REPO("prRepo", "\$.project.id"),
         PR_SOURCE_BRANCH("prSourceBranch", "\$.object_attributes.source_branch"),
         PR_TARGET_BRANCH("prTargetBranch", "\$.object_attributes.target_branch"),
-        PR_SHA("prSha", "\$.object_attributes.last_commit.id"),
-        PR_ACTION("prAction", "\$.object_attributes.state"),
         PR_FILTER_REGEX("prFilterExpression", "^(opened|reopened)\\s(Merge\\sRequest\\sHook)*?\$"),
-        PR_FILTER_TEXT("prFilterText", "\$pr_action x_gitlab_event"),
+        PR_FILTER_TEXT("prFilterText", "\$pr_action $x_gitlab_event"),
 
-        // push
-        REF_JSON_PATH("refJsonPath", "\$.ref"),
         PUSH_FILTER_TEXT("pushFilterText", "\$ref x_gitlab_event"),
-        PUSH_FILTER_REGEX("pushFilterExpression", "^(refs/heads/master\\sPush\\sHook)*?\$")
+        PUSH_FILTER_REGEX("pushFilterExpression", "^(refs/heads/master\\sPush\\sHook)*?\$"),
+        REF_JSON_PATH("refJsonPath", "\$.ref")
 
         private final String key
         private final String value
