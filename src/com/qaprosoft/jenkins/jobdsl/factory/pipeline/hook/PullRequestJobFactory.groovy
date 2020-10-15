@@ -23,6 +23,7 @@ public class PullRequestJobFactory extends PipelineFactory {
         this.host = host
         this.organization = organization
         this.repo = repo
+        this.branch = branch
         this.scmRepoUrl = scmRepoUrl
         this.webHookArgs = webHookArgs
     }
