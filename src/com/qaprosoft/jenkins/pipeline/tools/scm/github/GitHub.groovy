@@ -25,7 +25,7 @@ class GitHub extends Scm {
         PR_TARGET_BRANCH("prTargetBranch", "\$.pull_request.base.ref"),
         PR_SHA("prSha", "\$.pull_request.head.sha"),
         PR_ACTION("prAction", "\$.action"),
-        PR_FILTER_REGEX("prFilterExpression", "^(opened|reopened)\\spull_request)*?\$"),
+        PR_FILTER_REGEX("prFilterExpression", "^((opened|reopened)\\spull_request)*?\$"),
         PR_FILTER_TEXT("prFilterText", "\$pr_action x_github_event"),
 
         // push
