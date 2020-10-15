@@ -31,6 +31,7 @@ public class Runner extends AbstractRunner {
 
     public void onPullRequest() {
         context.node("maven") {
+            logger.info("THIS BRANCH: " + this.branch)
             logger.info("Runner->onPullRequest")
             getScm().clonePR()
             compile("-U clean compile test -DskipTests", true)
