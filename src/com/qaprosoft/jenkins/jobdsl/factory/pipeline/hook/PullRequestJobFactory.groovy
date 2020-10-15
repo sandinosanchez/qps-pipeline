@@ -99,8 +99,7 @@ public class PullRequestJobFactory extends PipelineFactory {
 
     protected def isDebugActive() {
         logger.debug("LoggerLevel: " + logger.pipelineLogLevel)
-        def isDebugActive = logger.pipelineLogLevel.equals(Logger.LogLevel.DEBUG) ? true : false
-        logger.debug("isDebugActive: " + isDebugActive)
+        return logger.pipelineLogLevel.equals(Logger.LogLevel.DEBUG) ? true : false
     }
 
     protected def getGitHubAuthId(project) {
