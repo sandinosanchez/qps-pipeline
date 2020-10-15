@@ -31,7 +31,6 @@ class GitHub extends Scm {
         PUSH_FILTER_REGEX("pushFilterRegex", "^(refs/heads/master\\spush)*?\$"),
         REF_JSON_PATH("refJsonPath", "\$.ref")
 
-
         private final String key
         private final String value
 
@@ -43,11 +42,6 @@ class GitHub extends Scm {
         public String getKey() { return key }
 
         public String getValue() { return value }
-    }
-
-    @Override
-    protected String getBranchSpec(spec) {
-        return String.format(branchSpec, spec)
     }
 
 }

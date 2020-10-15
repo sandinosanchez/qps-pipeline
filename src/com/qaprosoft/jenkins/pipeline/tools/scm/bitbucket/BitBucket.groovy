@@ -7,7 +7,7 @@ class BitBucket extends Scm {
     BitBucket(context, host, org, repo, branch) {
         super(context, host, org, repo, branch)
         this.prRefSpec = '+refs/pull/*:refs/remotes/origin/pr/*'
-        this.branchSpec = branch
+        this.branchSpec = "%s"
     }
 
     BitBucket(context) {
@@ -43,8 +43,4 @@ class BitBucket extends Scm {
         public String getValue() {return value }
     }
 
-    @Override
-    protected String getBranchSpec(spec) {
-        return branchSpec
-    }
 }
