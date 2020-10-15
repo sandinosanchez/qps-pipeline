@@ -44,7 +44,7 @@ class Gitlab extends Scm {
 
     @Override
     protected String getBranchSpec(spec) {
-        return branch
+        return this.branch
     }
 
 }
