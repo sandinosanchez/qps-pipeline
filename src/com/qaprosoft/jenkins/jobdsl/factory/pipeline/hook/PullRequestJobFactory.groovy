@@ -25,8 +25,6 @@ public class PullRequestJobFactory extends PipelineFactory {
     }
 
     def create() {
-        def isDebugActive = logger.pipelineLogLevel.equals("DEBUG") ? true : false
-        logger.debug("isDebugActive: " + isDebugActive)
         def pipelineJob = super.create()
 
 
@@ -83,8 +81,8 @@ public class PullRequestJobFactory extends PipelineFactory {
                             }
 
                             token("abc123")
-                            printContributedVariables(${isDebugActive})
-                            printPostContent(${isDebugActive})
+                            printContributedVariables(isDebugActive())
+                            printPostContent(isDebugActive)
                             silentResponse(false)
                             regexpFilterText(webHookArgs.prFilterText)
                             regexpFilterExpression(webHookArgs.prFilterExpression)
@@ -95,6 +93,12 @@ public class PullRequestJobFactory extends PipelineFactory {
 
             return pipelineJob
         }
+    }
+
+    protected def isDebugActive() {
+        logger.debug("LoggerLevel: " + logger.pipelineLogLevel)
+        def isDebugActive = logger.pipelineLogLevel.equals("DEBUG") ? true : false
+        logger.debug("isDebugActive: " + isDebugActive)
     }
 
     protected def getGitHubAuthId(project) {
