@@ -11,10 +11,11 @@ public class PullRequestJobFactory extends PipelineFactory {
     def host
     def organization
     def repo
+    def branch
     def scmRepoUrl
     def webHookArgs
 
-    public PullRequestJobFactory(folder, pipelineScript, jobName, jobDesc, host, organization, repo, scmRepoUrl, webHookArgs) {
+    public PullRequestJobFactory(folder, pipelineScript, jobName, jobDesc, host, organization, repo, branch, scmRepoUrl, webHookArgs) {
         this.folder = folder
         this.pipelineScript = pipelineScript
         this.name = jobName
@@ -34,6 +35,7 @@ public class PullRequestJobFactory extends PipelineFactory {
 
             parameters {
                 stringParam('repo', repo, 'Your GitHub repository for scanning')
+                configure addHiddenParameter('branch', '', branch)
                 configure addHiddenParameter('GITHUB_HOST', '', host)
                 configure addHiddenParameter('GITHUB_ORGANIZATION', '', organization)
                 stringParam('pr_number', '', '')
