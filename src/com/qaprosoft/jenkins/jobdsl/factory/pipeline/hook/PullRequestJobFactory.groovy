@@ -82,7 +82,7 @@ public class PullRequestJobFactory extends PipelineFactory {
 
                             token("abc123")
                             printContributedVariables(isDebugActive())
-                            printPostContent(isDebugActive)
+                            printPostContent(isDebugActive())
                             silentResponse(false)
                             regexpFilterText(webHookArgs.prFilterText)
                             regexpFilterExpression(webHookArgs.prFilterExpression)
@@ -97,7 +97,7 @@ public class PullRequestJobFactory extends PipelineFactory {
 
     protected def isDebugActive() {
         logger.debug("LoggerLevel: " + logger.pipelineLogLevel)
-        def isDebugActive = logger.pipelineLogLevel.equals("DEBUG") ? true : false
+        def isDebugActive = logger.pipelineLogLevel.equals(Logger.LogLevel.DEBUG) ? true : false
         logger.debug("isDebugActive: " + isDebugActive)
     }
 
