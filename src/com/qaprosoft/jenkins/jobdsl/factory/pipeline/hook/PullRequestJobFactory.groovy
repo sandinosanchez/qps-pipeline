@@ -83,8 +83,8 @@ public class PullRequestJobFactory extends PipelineFactory {
                             }
 
                             token("abc123")
-                            printContributedVariables(isDebugActive)
-                            printPostContent(isDebugActive)
+                            printContributedVariables($isDebugActive)
+                            printPostContent($isDebugActive)
                             silentResponse(false)
                             regexpFilterText(webHookArgs.prFilterText)
                             regexpFilterExpression(webHookArgs.prFilterExpression)
