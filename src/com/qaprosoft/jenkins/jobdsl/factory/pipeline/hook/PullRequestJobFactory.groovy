@@ -11,6 +11,7 @@ public class PullRequestJobFactory extends PipelineFactory {
     def repo
     def scmRepoUrl
     def webHookArgs
+    def logLevel
 
     public PullRequestJobFactory(folder, pipelineScript, jobName, jobDesc, host, organization, repo, scmRepoUrl, webHookArgs) {
         this.folder = folder
@@ -22,11 +23,14 @@ public class PullRequestJobFactory extends PipelineFactory {
         this.repo = repo
         this.scmRepoUrl = scmRepoUrl
         this.webHookArgs = webHookArgs
+        this.logLevel = logger.pipelineLogLevel
     }
 
     def create() {
         def pipelineJob = super.create()
         pipelineJob.with {
+
+            def isDebugActive = logger.pipelineLogLevel.equals(logger.LogLevel.DEBUG) ? true : false
 
             parameters {
                 stringParam('repo', repo, 'Your GitHub repository for scanning')
@@ -79,8 +83,8 @@ public class PullRequestJobFactory extends PipelineFactory {
                             }
 
                             token("abc123")
-                            printContributedVariables(true)
-                            printPostContent(true)
+                            printContributedVariables(isDebugActive)
+                            printPostContent(isDebugActive)
                             silentResponse(false)
                             regexpFilterText(webHookArgs.prFilterText)
                             regexpFilterExpression(webHookArgs.prFilterExpression)
