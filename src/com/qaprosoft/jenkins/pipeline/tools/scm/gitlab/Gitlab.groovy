@@ -5,7 +5,7 @@ import com.qaprosoft.jenkins.pipeline.tools.scm.Scm
 class Gitlab extends Scm {
 
     Gitlab(context, host, org, repo, branch) {
-        super(context, host, org, repo)
+        super(context, host, org, repo, branch)
         this.prRefSpec = "+refs/merge-requests/*:refs/remotes/merge-requests/pr/*"
         this.branchSpec = branch
     }
