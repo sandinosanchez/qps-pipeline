@@ -21,20 +21,21 @@ public abstract class AbstractRunner extends BaseObject {
         super(context)
         sc = new SonarClient(context)
 
-        def host = Configuration.get("scmHost")
-        def org = Configuration.get("scmOrg")
+        def host = Configuration.get("GITHUB_HOST")
+        def org = Configuration.get("GITHUB_ORGANIZATION")
         def repo = Configuration.get("repo")
         def branch = Configuration.get("branch")
 
         switch (host.toLowerCase()) {
             case ~/^.*github.*$/:
-                this.setScm(new GitHub(context, host, org, repo, branch))
+                this.scmClient = new GitHub(context, host, org, repo, branch)
                 break
             case ~/^.*gitlab.*$/:
-                this.setScm(new Gitlab(context, host, org, repo, branch))
+                this.scmClient = new Gitlab(context, host, org, repo, branch)
                 break
             case ~/^.*bitbucket.*$/:
-                this.setScm(new BitBucket(context, host, org, repo, branch))
+                this.scmClient = new BitBucket(context, host, org, repo, branch)
+                break
         }
 
         initOrganization()
