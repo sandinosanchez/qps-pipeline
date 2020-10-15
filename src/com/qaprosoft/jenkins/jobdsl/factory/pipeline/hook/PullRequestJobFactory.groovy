@@ -25,7 +25,7 @@ public class PullRequestJobFactory extends PipelineFactory {
     }
 
     def create() {
-        def isDebugActive = logger.pipelineLogLevel.equals(logger.LogLevel.DEBUG) ? true : false
+        def isDebugActive = logger.pipelineLogLevel.equals("DEBUG") ? true : false
         def pipelineJob = super.create()
 
 
