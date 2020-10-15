@@ -7,6 +7,7 @@ class Gitlab extends Scm {
     Gitlab(context, host, org, repo, branch) {
         super(context, host, org, repo, branch)
         this.prRefSpec = "+refs/merge-requests/*:refs/remotes/merge-requests/pr/*"
+        this.branchSpec = "pr-test1"
     }
 
     Gitlab(context) {
@@ -44,7 +45,7 @@ class Gitlab extends Scm {
 
     @Override
     protected String getBranchSpec(spec) {
-        return this.branch
+        return this.branchSpec
     }
 
 }
