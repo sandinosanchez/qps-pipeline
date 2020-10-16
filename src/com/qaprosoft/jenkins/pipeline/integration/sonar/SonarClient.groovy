@@ -41,7 +41,8 @@ class SonarClient extends HttpClient {
                           -Dsonar.pullrequest.provider=BitbucketServer"
             } else if (scmProvider.contains("gitlab")) {
                 goals += " -Dsonar.pullrequest.gitlab.repositorySlug=${Configuration.get("pr_repository")} \
-                          -Dsonar.pullrequest.provider=GitlabServer"
+                           -Dsonar.scm.revision=${Configuration.get("pr_sha")} \
+                           -Dsonar.pullrequest.provider=GitlabServer"
             }
 
             goals += " -Dsonar.pullrequest.key=${Configuration.get("pr_number")} \
