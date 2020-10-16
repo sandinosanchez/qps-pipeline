@@ -52,7 +52,7 @@ public class PushJobFactory extends PipelineFactory {
                 choiceParam('removedViewAction', ['IGNORE', 'DELETE'], '')
                 configure addHiddenParameter('userId', 'Identifier of the user who triggered the process', userId)
                 configure addHiddenParameter('zafiraFields', '', zafiraFields)
-                configure addHiddenParameter("ref", "", "")
+                configure addHiddenParameter('ref', '', '')
             }
 
             properties {
