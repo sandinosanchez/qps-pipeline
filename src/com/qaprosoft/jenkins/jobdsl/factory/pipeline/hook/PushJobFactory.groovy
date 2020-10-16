@@ -1,7 +1,9 @@
 package com.qaprosoft.jenkins.jobdsl.factory.pipeline.hook
 
-import groovy.transform.InheritConstructors
 import com.qaprosoft.jenkins.jobdsl.factory.pipeline.PipelineFactory
+import com.qaprosoft.jenkins.Logger
+
+import groovy.transform.InheritConstructors
 
 @InheritConstructors
 public class PushJobFactory extends PipelineFactory {
