@@ -52,6 +52,7 @@ public class PushJobFactory extends PipelineFactory {
                 choiceParam('removedViewAction', ['IGNORE', 'DELETE'], '')
                 configure addHiddenParameter('userId', 'Identifier of the user who triggered the process', userId)
                 configure addHiddenParameter('zafiraFields', '', zafiraFields)
+                configure addHiddenParameter("ref", "", "")
             }
 
             properties {
@@ -73,8 +74,8 @@ public class PushJobFactory extends PipelineFactory {
 			               }
                            
 			               token('abc123')
-			               printContributedVariables(false)
-			               printPostContent(false)
+			               printContributedVariables(isDebugActive())
+			               printPostContent(isDebugActive())
 			               silentResponse(false)
 			               regexpFilterText(webHookArgs.pushFilterText)
 			               regexpFilterExpression(webHookArgs.pushFilterRegex)
@@ -85,4 +86,10 @@ public class PushJobFactory extends PipelineFactory {
         }
         return pipelineJob
     }
+
+    protected def isDebugActive() {
+        logger.debug("LoggerLevel: " + logger.pipelineLogLevel)
+        return logger.pipelineLogLevel.equals(Logger.LogLevel.DEBUG) ? true : false
+    }
+
 }

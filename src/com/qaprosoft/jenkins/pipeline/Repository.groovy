@@ -196,7 +196,7 @@ class Repository extends BaseObject {
                     "- Select application/json in \"Content Type\" field\n- Tick \"Send me everything.\" option\n- Click \"Add webhook\" button"
 
             // WebHooks related jobs
-            registerObject("pull_request_job", new PullRequestJobFactory(repoFolder, getOnPullRequestScript(), "onPullRequest-" + Configuration.get(REPO), pullRequestPipelineJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get("pr_source_branch"), gitUrl, this.scmWebHookArgs))
+            registerObject("pull_request_job", new PullRequestJobFactory(repoFolder, getOnPullRequestScript(), "onPullRequest-" + Configuration.get(REPO), pullRequestPipelineJobDescription, scmHost, scmOrg, Configuration.get(REPO), Configuration.get(BRANCH), gitUrl, this.scmWebHookArgs))
             
             if (!'QPS-Pipeline'.equals(this.pipelineLibrary)) {
                 //load custom library to check inheritance for isTestNGRunner
