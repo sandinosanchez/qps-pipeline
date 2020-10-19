@@ -102,6 +102,7 @@ abstract class Scm implements ISCM {
             def branch = Configuration.get("pr_source_branch")
             def gitUrl = Configuration.resolveVars(scmUrl)
             logger.info("BranchSpec:  ${this.generateBranchSpec()}")
+            logger.info("prRefSpec: ${this.refSpec}")
             logger.info("GitHub->clonePR\nGIT_URL: ${gitUrl}\nbranch: ${branch}")
             context.checkout getCheckoutParams(gitUrl, branch, ".", true, false, prRefSpec, credentialsId)
         }
