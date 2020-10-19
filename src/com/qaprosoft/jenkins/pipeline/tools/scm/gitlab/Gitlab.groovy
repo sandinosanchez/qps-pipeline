@@ -45,8 +45,8 @@ class Gitlab extends Scm {
     }
 
     @Override
-    protected String getBranchSpec(spec) {
-        return String.format(branchSpec, branch)
+    protected String getBranchSpec() {
+        return String.format(branchSpec, Configuration.get("pr_number"))
     }
 
 }
