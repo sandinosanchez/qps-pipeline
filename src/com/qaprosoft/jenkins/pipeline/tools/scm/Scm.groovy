@@ -45,6 +45,8 @@ abstract class Scm implements ISCM {
         }
 	}
 
+    protected abstract String generateBranchSpec()
+
 	public def clone() {
         clone(true)
     }
