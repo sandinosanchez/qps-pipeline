@@ -1,6 +1,7 @@
 package com.qaprosoft.jenkins.pipeline.tools.scm.bitbucket
 
 import com.qaprosoft.jenkins.pipeline.tools.scm.Scm
+import com.qaprosoft.jenkins.pipeline.Configuration
 
 class BitBucket extends Scm {
 

@@ -1,6 +1,7 @@
 package com.qaprosoft.jenkins.pipeline.tools.scm.gitlab
 
 import com.qaprosoft.jenkins.pipeline.tools.scm.Scm
+import com.qaprosoft.jenkins.pipeline.Configuration
 
 class Gitlab extends Scm {
 
@@ -46,7 +47,7 @@ class Gitlab extends Scm {
 
     @Override
     protected String getBranchSpec() {
-        return String.format(branchSpec, Configuration.get("pr_number"))
+        return String.format(branchSpec, Configuration.get("pr_source_branch"))
     }
 
 }
