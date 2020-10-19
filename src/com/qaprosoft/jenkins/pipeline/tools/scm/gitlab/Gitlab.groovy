@@ -28,7 +28,7 @@ class Gitlab extends Scm {
         PR_FILTER_TEXT("prFilterText", "\$pr_action \$x_gitlab_event"),
 
         PUSH_FILTER_TEXT("pushFilterText", "\$ref x_gitlab_event"),
-        PUSH_FILTER_REGEX("pushFilterExpression", "^(refs/heads/master\\sPush\\sHook)*?\$"),
+        PUSH_FILTER_REGEX("pushFilterRegex", "^(refs/heads/master\\sPush\\sHook)*?\$"),
         REF_JSON_PATH("refJsonPath", "\$.ref")
 
         private final String key
