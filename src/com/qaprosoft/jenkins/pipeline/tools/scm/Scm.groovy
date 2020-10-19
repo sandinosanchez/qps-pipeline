@@ -63,6 +63,7 @@ abstract class Scm implements ISCM {
             logger.info("SCM_ORGANIZATION: ${this.org}")
             logger.info("SCM_URL: ${this.scmUrl}")
             logger.info("CREDENTIALS_ID: ${credentialsId}")
+            logger.info("SCM_REPO: ${this.repo}")
 
             if (fork) {
                 def tokenName = "token_$userId"
