@@ -44,7 +44,6 @@ class BitBucket extends Scm {
         public String getValue() {return value }
     }
 
-    @Override
     protected String getBranchSpec() {
         return String.format(branchSpec, Configuration.get("pr_source_branch"))
     }
